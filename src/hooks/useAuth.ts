@@ -7,6 +7,7 @@ interface UserProfile {
   full_name: string | null;
   email: string | null;
   division: string | null;
+  status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   updated_at: string;
 }
@@ -69,7 +70,7 @@ export const useAuth = () => {
         .single();
 
       if (error) throw error;
-      setProfile(data);
+      setProfile(data as UserProfile);
     } catch (error) {
       console.error('Error fetching profile:', error);
     }
@@ -127,5 +128,8 @@ export const useAuth = () => {
     isAuthenticated: !!user,
     isAdmin: userRole?.role === 'admin',
     isManager: userRole?.role === 'manager',
+    isPending: profile?.status === 'pending',
+    isApproved: profile?.status === 'approved',
+    isRejected: profile?.status === 'rejected',
   };
 };

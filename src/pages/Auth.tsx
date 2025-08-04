@@ -69,7 +69,7 @@ const Auth = () => {
 
         toast({
           title: "Success",
-          description: "Account created! Please check your email to verify your account.",
+          description: "Account created! Your registration is pending approval from an administrator.",
         });
       }
     } catch (error: any) {

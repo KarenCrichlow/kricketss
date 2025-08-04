@@ -7,6 +7,7 @@ interface UserProfile {
   full_name: string | null;
   email: string | null;
   division: string | null;
+  status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   updated_at: string;
   user_roles: Array<{ role: 'admin' | 'manager' | 'user' }>;
@@ -184,6 +185,31 @@ export const useAdminUsers = () => {
     }
   };
 
+  const updateUserStatus = async (userId: string, status: 'pending' | 'approved' | 'rejected') => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ status })
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `User ${status} successfully`,
+      });
+
+      await fetchAllUsers();
+    } catch (error: any) {
+      console.error('Error updating user status:', error);
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return {
     users,
     loading,
@@ -191,6 +217,7 @@ export const useAdminUsers = () => {
     createUser,
     updateUserRole,
     updateUserProfile,
+    updateUserStatus,
     deleteUser,
   };
 };

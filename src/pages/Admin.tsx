@@ -18,6 +18,7 @@ const Admin = () => {
     createUser,
     updateUserRole,
     updateUserProfile,
+    updateUserStatus,
     deleteUser,
   } = useAdminUsers();
 
@@ -84,6 +85,7 @@ const Admin = () => {
               users={users}
               onUpdateRole={updateUserRole}
               onUpdateProfile={updateUserProfile}
+              onUpdateStatus={updateUserStatus}
               onDeleteUser={deleteUser}
               isLoading={loading}
             />

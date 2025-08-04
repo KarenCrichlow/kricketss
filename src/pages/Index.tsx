@@ -11,8 +11,10 @@ import { usePriceEntries } from '@/hooks/usePriceEntries';
 import { useStores } from '@/hooks/useStores';
 import { useExcelExport } from '@/hooks/useExcelExport';
 import { useAuth } from '@/hooks/useAuth';
+import { PendingApproval } from '@/components/PendingApproval';
 import { ShoppingCart, Download, LogOut, User, Loader2, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -22,7 +24,7 @@ const Index = () => {
   const [pendingUPC, setPendingUPC] = useState('');
   
   const navigate = useNavigate();
-  const { user, profile, userRole, loading, signOut, isAuthenticated, isAdmin } = useAuth();
+  const { user, profile, userRole, loading, signOut, isAuthenticated, isAdmin, isPending, isRejected } = useAuth();
   const { getAllProducts, createProduct, findProductByUPC, isLoading: productLoading } = useProducts();
   const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
   const { stores, isLoading: storesLoading } = useStores();
@@ -34,6 +36,25 @@ const Index = () => {
       navigate('/auth');
     }
   }, [loading, isAuthenticated, navigate]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold">Welcome to Price Tracker</h1>
+          <p className="text-muted-foreground">Please sign in to continue</p>
+          <Button asChild>
+            <Link to="/auth">Sign In</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show pending approval screen for users awaiting approval
+  if (isPending || isRejected) {
+    return <PendingApproval />;
+  }
 
   useEffect(() => {
     const loadProducts = async () => {

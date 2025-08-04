@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Trash2, User } from "lucide-react";
+import { Pencil, Trash2, User, Check, X } from "lucide-react";
 import { format } from "date-fns";
 
 interface UserProfile {
@@ -15,6 +15,7 @@ interface UserProfile {
   full_name: string | null;
   email: string | null;
   division: string | null;
+  status: 'pending' | 'approved' | 'rejected';
   created_at: string;
   updated_at: string;
   user_roles: Array<{ role: 'admin' | 'manager' | 'user' }>;
@@ -24,11 +25,12 @@ interface UserListProps {
   users: UserProfile[];
   onUpdateRole: (userId: string, role: 'admin' | 'manager' | 'user') => Promise<void>;
   onUpdateProfile: (userId: string, updates: { full_name?: string; division?: string }) => Promise<void>;
+  onUpdateStatus: (userId: string, status: 'pending' | 'approved' | 'rejected') => Promise<void>;
   onDeleteUser: (userId: string) => Promise<void>;
   isLoading: boolean;
 }
 
-export const UserList = ({ users, onUpdateRole, onUpdateProfile, onDeleteUser, isLoading }: UserListProps) => {
+export const UserList = ({ users, onUpdateRole, onUpdateProfile, onUpdateStatus, onDeleteUser, isLoading }: UserListProps) => {
   const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
   const [editFormData, setEditFormData] = useState({ full_name: "", division: "" });
 
@@ -37,6 +39,15 @@ export const UserList = ({ users, onUpdateRole, onUpdateProfile, onDeleteUser, i
       case 'admin': return 'destructive';
       case 'manager': return 'default';
       case 'user': return 'secondary';
+      default: return 'outline';
+    }
+  };
+
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status) {
+      case 'approved': return 'default';
+      case 'pending': return 'secondary';
+      case 'rejected': return 'destructive';
       default: return 'outline';
     }
   };
@@ -72,6 +83,7 @@ export const UserList = ({ users, onUpdateRole, onUpdateProfile, onDeleteUser, i
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Division</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Actions</TableHead>
@@ -88,6 +100,11 @@ export const UserList = ({ users, onUpdateRole, onUpdateProfile, onDeleteUser, i
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.division || "No division"}</TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusBadgeVariant(user.status)}>
+                        {user.status}
+                      </Badge>
+                    </TableCell>
                     <TableCell>
                       <Select 
                         value={userRole} 
@@ -109,6 +126,29 @@ export const UserList = ({ users, onUpdateRole, onUpdateProfile, onDeleteUser, i
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
+                        {user.status === 'pending' && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => onUpdateStatus(user.id, 'approved')}
+                              disabled={isLoading}
+                              className="text-green-600 hover:text-green-700"
+                            >
+                              <Check className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => onUpdateStatus(user.id, 'rejected')}
+                              disabled={isLoading}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                        
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
