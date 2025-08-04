@@ -48,11 +48,11 @@ export const useExcelExport = () => {
         const row: any = {
           UID: product.UID,
           UPC: product.UPC,
-          Description: product.Description,
-          Size: product.Size,
-          Brand: product.Brand,
           Category: product.Category,
           Segment: product.Segment,
+          Brand: product.Brand,
+          Description: product.Description,
+          Size: product.Size,
           'Massy - 29/01/2025': product.Price
         };
 
@@ -84,11 +84,11 @@ export const useExcelExport = () => {
             const row: any = {
               UID: product.UID,
               UPC: product.UPC,
-              Description: product.Description,
-              Size: product.Size,
-              Brand: product.Brand,
               Category: product.Category,
               Segment: product.Segment,
+              Brand: product.Brand,
+              Description: product.Description,
+              Size: product.Size,
               'Massy - 29/01/2025': product.Price
             };
 
