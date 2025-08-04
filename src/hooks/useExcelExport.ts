@@ -8,6 +8,47 @@ interface ExportData {
   priceEntries: any[];
 }
 
+const formatWorksheet = (worksheet: any, data: any[]) => {
+  if (!data || data.length === 0) return;
+  
+  // Get column keys from first row
+  const columnKeys = Object.keys(data[0]);
+  
+  // Auto-fit columns and set font size
+  const colWidths: any[] = [];
+  
+  columnKeys.forEach((key, colIndex) => {
+    // Calculate max width for this column
+    let maxWidth = key.length; // Header width
+    
+    data.forEach(row => {
+      const cellValue = String(row[key] || '');
+      maxWidth = Math.max(maxWidth, cellValue.length);
+    });
+    
+    // Set minimum width of 8 and maximum of 50
+    colWidths.push({ wch: Math.min(Math.max(maxWidth + 2, 8), 50) });
+  });
+  
+  worksheet['!cols'] = colWidths;
+  
+  // Set font size to 10 for all cells
+  const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
+  
+  for (let row = range.s.r; row <= range.e.r; row++) {
+    for (let col = range.s.c; col <= range.e.c; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+      const cell = worksheet[cellAddress];
+      
+      if (cell) {
+        if (!cell.s) cell.s = {};
+        if (!cell.s.font) cell.s.font = {};
+        cell.s.font.sz = 10;
+      }
+    }
+  }
+};
+
 export const useExcelExport = () => {
   const [isExporting, setIsExporting] = useState(false);
   const { toast } = useToast();
@@ -68,6 +109,10 @@ export const useExcelExport = () => {
       });
 
       const summaryWorksheet = XLSX.utils.json_to_sheet(summaryData);
+      
+      // Format the summary worksheet
+      formatWorksheet(summaryWorksheet, summaryData);
+      
       XLSX.utils.book_append_sheet(workbook, summaryWorksheet, 'Summary');
 
       // Create individual store tabs
@@ -104,6 +149,10 @@ export const useExcelExport = () => {
 
         if (storeData.length > 0) {
           const storeWorksheet = XLSX.utils.json_to_sheet(storeData);
+          
+          // Format the store worksheet
+          formatWorksheet(storeWorksheet, storeData);
+          
           XLSX.utils.book_append_sheet(workbook, storeWorksheet, storeName.slice(0, 31)); // Excel tab name limit
         }
       });
