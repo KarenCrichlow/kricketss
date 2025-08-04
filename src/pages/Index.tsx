@@ -37,6 +37,17 @@ const Index = () => {
     }
   }, [loading, isAuthenticated, navigate]);
 
+  // Load products - this hook must always be called
+  useEffect(() => {
+    const loadProducts = async () => {
+      if (isAuthenticated && !isPending && !isRejected) {
+        const allProducts = await getAllProducts();
+        setProducts(allProducts);
+      }
+    };
+    loadProducts();
+  }, [isAuthenticated, isPending, isRejected, getAllProducts]);
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -55,14 +66,6 @@ const Index = () => {
   if (isPending || isRejected) {
     return <PendingApproval />;
   }
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      const allProducts = await getAllProducts();
-      setProducts(allProducts);
-    };
-    loadProducts();
-  }, []);
 
   const handleUPCSubmit = async (upc: string) => {
     const product = await findProductByUPC(upc);
