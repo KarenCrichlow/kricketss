@@ -8,7 +8,9 @@ import { PriceHistory } from '@/components/PriceHistory';
 import { useProducts } from '@/hooks/useProducts';
 import { usePriceEntries } from '@/hooks/usePriceEntries';
 import { useStores } from '@/hooks/useStores';
-import { ShoppingCart } from 'lucide-react';
+import { useExcelExport } from '@/hooks/useExcelExport';
+import { ShoppingCart, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -20,6 +22,7 @@ const Index = () => {
   const { getAllProducts, createProduct, findProductByUPC, isLoading: productLoading } = useProducts();
   const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
   const { stores, isLoading: storesLoading } = useStores();
+  const { exportToExcel, isExporting } = useExcelExport();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -91,12 +94,23 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-md">
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <ShoppingCart className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold">Kricket</h1>
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <ShoppingCart className="h-8 w-8 text-primary" />
+              <h1 className="text-2xl font-bold">Kricket</h1>
+            </div>
+            <Button 
+              onClick={exportToExcel}
+              disabled={isExporting}
+              variant="outline"
+              size="sm"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              {isExporting ? "Exporting..." : "Excel"}
+            </Button>
           </div>
-          <p className="text-sm text-muted-foreground">Price Collection App</p>
+          <p className="text-sm text-muted-foreground text-center">Price Collection App</p>
         </div>
 
         <div className="space-y-6">
