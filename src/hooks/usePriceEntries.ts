@@ -54,13 +54,14 @@ export const usePriceEntries = () => {
 
   const getPriceHistory = async (productUID: number): Promise<PriceEntry[]> => {
     try {
-      const { data, error } = await supabase
+      // Get price entries from price_entries table
+      const { data: priceEntries, error: priceError } = await supabase
         .from('price_entries')
         .select('*')
         .eq('product_uid', productUID)
         .order('created_at', { ascending: false });
 
-      if (error) {
+      if (priceError) {
         toast({
           title: "Error",
           description: "Failed to fetch price history",
@@ -69,7 +70,39 @@ export const usePriceEntries = () => {
         return [];
       }
 
-      return data || [];
+      // Get existing price from Food Items table (assuming it's from Massy store, ID 1)
+      const { data: foodItem, error: foodError } = await supabase
+        .from('Food Items')
+        .select('Price, created_at')
+        .eq('UID', productUID)
+        .single();
+
+      if (foodError && foodError.code !== 'PGRST116') {
+        toast({
+          title: "Error",
+          description: "Failed to fetch existing price data",
+          variant: "destructive",
+        });
+        return priceEntries || [];
+      }
+
+      const allEntries: PriceEntry[] = [...(priceEntries || [])];
+
+      // Add existing price from Food Items table if it exists
+      if (foodItem && foodItem.Price) {
+        const existingPriceEntry: PriceEntry = {
+          id: `existing-${productUID}`,
+          product_uid: productUID,
+          store_id: 1, // Massy store ID
+          price: parseFloat(foodItem.Price),
+          created_at: foodItem.created_at,
+          updated_at: foodItem.created_at,
+        };
+        allEntries.push(existingPriceEntry);
+      }
+
+      // Sort all entries by creation date, newest first
+      return allEntries.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     } catch (error) {
       toast({
         title: "Error",
