@@ -68,18 +68,25 @@ const Index = () => {
   }
 
   const handleUPCSubmit = async (upc: string) => {
-    const product = await findProductByUPC(upc);
-    if (product) {
-      setCurrentProduct(product);
-      const history = await getPriceHistory(product.UID);
-      setPriceHistory(history);
-      setShowNewProductForm(false);
-    } else {
-      // Product not found, show form to create new product
-      setPendingUPC(upc);
-      setShowNewProductForm(true);
-      setCurrentProduct(null);
-      setPriceHistory([]);
+    console.log('Starting UPC search for:', upc);
+    try {
+      const product = await findProductByUPC(upc);
+      console.log('Search result:', product);
+      
+      if (product) {
+        setCurrentProduct(product);
+        const history = await getPriceHistory(product.UID);
+        setPriceHistory(history);
+        setShowNewProductForm(false);
+      } else {
+        // Product not found, show form to create new product
+        setPendingUPC(upc);
+        setShowNewProductForm(true);
+        setCurrentProduct(null);
+        setPriceHistory([]);
+      }
+    } catch (error) {
+      console.error('Error in handleUPCSubmit:', error);
     }
   };
 
