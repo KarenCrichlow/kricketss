@@ -76,13 +76,16 @@ export const useAdminUsers = () => {
       if (error) throw error;
 
       if (data.user) {
-        // Update profile with division if provided
+        // Update profile with division and set as approved
+        const profileUpdates: any = { status: 'approved' };
         if (userData.division) {
-          await supabase
-            .from('profiles')
-            .update({ division: userData.division })
-            .eq('id', data.user.id);
+          profileUpdates.division = userData.division;
         }
+        
+        await supabase
+          .from('profiles')
+          .update(profileUpdates)
+          .eq('id', data.user.id);
 
         // Update user role if different from default
         if (userData.role !== 'user') {
