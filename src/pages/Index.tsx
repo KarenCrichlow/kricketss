@@ -11,7 +11,7 @@ import { usePriceEntries } from '@/hooks/usePriceEntries';
 import { useStores } from '@/hooks/useStores';
 import { useExcelExport } from '@/hooks/useExcelExport';
 import { useAuth } from '@/hooks/useAuth';
-import { ShoppingCart, Download, LogOut, User, Loader2 } from 'lucide-react';
+import { ShoppingCart, Download, LogOut, User, Loader2, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
@@ -22,7 +22,7 @@ const Index = () => {
   const [pendingUPC, setPendingUPC] = useState('');
   
   const navigate = useNavigate();
-  const { user, profile, userRole, loading, signOut, isAuthenticated } = useAuth();
+  const { user, profile, userRole, loading, signOut, isAuthenticated, isAdmin } = useAuth();
   const { getAllProducts, createProduct, findProductByUPC, isLoading: productLoading } = useProducts();
   const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
   const { stores, isLoading: storesLoading } = useStores();
@@ -130,6 +130,16 @@ const Index = () => {
                 <Download className="h-4 w-4 mr-2" />
                 {isExporting ? "Exporting..." : "Excel"}
               </Button>
+              {isAdmin && (
+                <Button 
+                  onClick={() => navigate('/admin')}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin
+                </Button>
+              )}
               <Button 
                 onClick={signOut}
                 variant="ghost"
