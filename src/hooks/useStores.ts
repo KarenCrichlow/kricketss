@@ -10,10 +10,11 @@ export const useStores = () => {
   const fetchStores = async () => {
     setIsLoading(true);
     try {
+      // Since we don't have the Stores table in types yet, we'll use any for now
       const { data, error } = await supabase
-        .from('stores')
+        .from('Stores' as any)
         .select('*')
-        .order('name');
+        .order('Stores');
 
       if (error) {
         toast({
@@ -24,7 +25,14 @@ export const useStores = () => {
         return;
       }
 
-      setStores(data || []);
+      // Map the data to match expected interface
+      const mappedStores = (data || []).map((store: any) => ({
+        id: store.id.toString(),
+        name: store.Stores,
+        location: store.Stores // Using same field for location for now
+      }));
+
+      setStores(mappedStores);
     } catch (error) {
       toast({
         title: "Error",
