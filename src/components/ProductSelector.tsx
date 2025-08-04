@@ -20,14 +20,14 @@ interface ProductSelectorProps {
   products: Product[];
   onProductSelect: (product: Product) => void;
   isLoading?: boolean;
+  selectedProduct?: Product | null;
 }
 
-export const ProductSelector = ({ products, onProductSelect, isLoading }: ProductSelectorProps) => {
+export const ProductSelector = ({ products, onProductSelect, isLoading, selectedProduct: externalSelectedProduct }: ProductSelectorProps) => {
   const [open, setOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const selectedProduct = externalSelectedProduct;
 
   const handleProductSelect = (product: Product) => {
-    setSelectedProduct(product);
     setOpen(false);
     onProductSelect(product);
   };

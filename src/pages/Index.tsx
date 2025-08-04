@@ -123,6 +123,7 @@ const Index = () => {
             products={products}
             onProductSelect={handleProductSelect}
             isLoading={productLoading}
+            selectedProduct={currentProduct}
           />
 
           {showNewProductForm && (
