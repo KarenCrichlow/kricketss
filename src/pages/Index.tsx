@@ -46,7 +46,7 @@ const Index = () => {
       }
     };
     loadProducts();
-  }, [isAuthenticated, isPending, isRejected, getAllProducts]);
+  }, [isAuthenticated, isPending, isRejected]); // Removed getAllProducts from dependencies
 
   if (!isAuthenticated) {
     return (
