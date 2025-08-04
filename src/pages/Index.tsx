@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { UPCScanner } from '@/components/UPCScanner';
+import { ProductSelector } from '@/components/ProductSelector';
 import { ProductInfo } from '@/components/ProductInfo';
 import { PriceEntryForm } from '@/components/PriceEntryForm';
 import { PriceHistory } from '@/components/PriceHistory';
@@ -11,10 +12,19 @@ import { ShoppingCart } from 'lucide-react';
 const Index = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [priceHistory, setPriceHistory] = useState([]);
+  const [products, setProducts] = useState([]);
   
-  const { findProductByUPC, isLoading: productLoading } = useProducts();
+  const { getAllProducts, findProductByUPC, isLoading: productLoading } = useProducts();
   const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
   const { stores, isLoading: storesLoading } = useStores();
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const allProducts = await getAllProducts();
+      setProducts(allProducts);
+    };
+    loadProducts();
+  }, []);
 
   const handleUPCSubmit = async (upc: string) => {
     const product = await findProductByUPC(upc);
@@ -23,6 +33,12 @@ const Index = () => {
       const history = await getPriceHistory(product.UID);
       setPriceHistory(history);
     }
+  };
+
+  const handleProductSelect = async (product: any) => {
+    setCurrentProduct(product);
+    const history = await getPriceHistory(product.UID);
+    setPriceHistory(history);
   };
 
   const handlePriceSubmit = async (data: { price: number; storeId: string }) => {
@@ -49,6 +65,12 @@ const Index = () => {
         <div className="space-y-6">
           <UPCScanner 
             onUPCSubmit={handleUPCSubmit}
+            isLoading={productLoading}
+          />
+
+          <ProductSelector 
+            products={products}
+            onProductSelect={handleProductSelect}
             isLoading={productLoading}
           />
 

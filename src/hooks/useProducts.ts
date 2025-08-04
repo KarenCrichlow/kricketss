@@ -6,6 +6,36 @@ export const useProducts = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  const getAllProducts = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('Food Items')
+        .select('*')
+        .order('Description');
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load products",
+          variant: "destructive",
+        });
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load products",
+        variant: "destructive",
+      });
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const findProductByUPC = async (upc: string) => {
     setIsLoading(true);
     try {
@@ -47,6 +77,7 @@ export const useProducts = () => {
   };
 
   return {
+    getAllProducts,
     findProductByUPC,
     isLoading,
   };
