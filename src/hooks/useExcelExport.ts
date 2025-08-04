@@ -32,19 +32,36 @@ const formatWorksheet = (worksheet: any, data: any[]) => {
   
   worksheet['!cols'] = colWidths;
   
-  // Set font size to 10 for all cells
+  // Set font to Arial size 10 for all cells
   const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
   
   for (let row = range.s.r; row <= range.e.r; row++) {
     for (let col = range.s.c; col <= range.e.c; col++) {
       const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+      
+      if (!worksheet[cellAddress]) {
+        worksheet[cellAddress] = { t: 's', v: '' };
+      }
+      
       const cell = worksheet[cellAddress];
       
-      if (cell) {
-        if (!cell.s) cell.s = {};
+      // Initialize cell style object
+      if (!cell.s) {
+        cell.s = {
+          font: {
+            name: 'Arial',
+            sz: 10,
+            color: { rgb: '000000' }
+          },
+          alignment: {
+            vertical: 'center',
+            horizontal: 'left'
+          }
+        };
+      } else {
         if (!cell.s.font) cell.s.font = {};
-        cell.s.font.sz = 10;
         cell.s.font.name = 'Arial';
+        cell.s.font.sz = 10;
       }
     }
   }
@@ -162,8 +179,17 @@ export const useExcelExport = () => {
       const now = new Date();
       const filename = `price_data_${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}.xlsx`;
 
-      // Save file
-      XLSX.writeFile(workbook, filename);
+      // Save file with proper formatting options
+      const writeOpts = {
+        bookType: 'xlsx' as const,
+        type: 'binary' as const,
+        cellStyles: true,
+        sheetFormat: {
+          '!protect': false,
+          '!autofilter': { ref: 'A1:Z1000' }
+        }
+      };
+      XLSX.writeFile(workbook, filename, writeOpts);
 
       toast({
         title: "Success",
