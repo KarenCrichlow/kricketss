@@ -62,7 +62,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				'brand-teal': 'hsl(var(--brand-teal))'
+				'navy-blue': 'hsl(var(--navy-blue))'
 				}
 			},
 			borderRadius: {
