@@ -2,52 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    /* Modern Blue & Teal Theme - Light Mode */
     --background: 210 20% 98%;
     --foreground: 220 39% 11%;
-
     --card: 0 0% 100%;
     --card-foreground: 220 39% 11%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 220 39% 11%;
-
     --primary: 220 91% 20%;
     --primary-foreground: 210 20% 98%;
-
     --secondary: 185 84% 25%;
     --secondary-foreground: 0 0% 100%;
-
     --muted: 210 25% 95%;
     --muted-foreground: 220 14% 41%;
-
     --accent: 188 95% 68%;
     --accent-foreground: 220 39% 11%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 20% 98%;
-
     --border: 220 13% 91%;
     --input: 220 13% 91%;
     --ring: 220 91% 20%;
-
     --radius: 0.75rem;
-
-    /* Enhanced design tokens */
-    --primary-glow: 220 91% 35%;
-    --accent-glow: 188 95% 78%;
-    --gradient-primary: linear-gradient(135deg, hsl(220 91% 20%), hsl(220 91% 35%));
-    --gradient-accent: linear-gradient(135deg, hsl(185 84% 25%), hsl(188 95% 68%));
-    --gradient-bg: linear-gradient(180deg, hsl(210 20% 98%), hsl(210 25% 96%));
     --navy-blue: 220 100% 15%;
-    --shadow-elegant: 0 10px 30px -10px hsl(220 91% 20% / 0.3);
-    --shadow-glow: 0 0 40px hsl(220 91% 35% / 0.4);
 
     --sidebar-background: 220 25% 97%;
     --sidebar-foreground: 220 39% 11%;
@@ -60,44 +37,26 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Modern Blue & Teal Theme - Dark Mode */
     --background: 220 39% 11%;
     --foreground: 210 20% 98%;
-
     --card: 220 35% 15%;
     --card-foreground: 210 20% 98%;
-
     --popover: 220 35% 15%;
     --popover-foreground: 210 20% 98%;
-
     --primary: 220 91% 70%;
     --primary-foreground: 220 39% 11%;
-
     --secondary: 188 95% 68%;
     --secondary-foreground: 220 39% 11%;
-
     --muted: 220 35% 18%;
     --muted-foreground: 220 14% 71%;
-
     --accent: 185 84% 39%;
     --accent-foreground: 210 20% 98%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 20% 98%;
-
     --border: 220 35% 18%;
     --input: 220 35% 18%;
     --ring: 220 91% 70%;
-
-    /* Enhanced design tokens for dark mode */
-    --primary-glow: 220 91% 80%;
-    --accent-glow: 188 95% 78%;
-    --gradient-primary: linear-gradient(135deg, hsl(220 91% 70%), hsl(220 91% 80%));
-    --gradient-accent: linear-gradient(135deg, hsl(185 84% 39%), hsl(188 95% 68%));
-    --gradient-bg: linear-gradient(180deg, hsl(220 39% 11%), hsl(220 35% 15%));
     --navy-blue: 220 100% 25%;
-    --shadow-elegant: 0 10px 30px -10px hsl(220 91% 70% / 0.3);
-    --shadow-glow: 0 0 40px hsl(220 91% 70% / 0.4);
 
     --sidebar-background: 220 35% 15%;
     --sidebar-foreground: 210 20% 98%;
@@ -114,7 +73,6 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
   }
