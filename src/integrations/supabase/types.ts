@@ -50,6 +50,24 @@ export type Database = {
         }
         Relationships: []
       }
+      Stores: {
+        Row: {
+          created_at: string | null
+          id: number
+          Stores: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          Stores: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          Stores?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
