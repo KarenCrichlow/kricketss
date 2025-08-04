@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UPCScanner } from '@/components/UPCScanner';
 import { ProductSelector } from '@/components/ProductSelector';
 import { NewProductForm } from '@/components/NewProductForm';
@@ -9,7 +10,8 @@ import { useProducts } from '@/hooks/useProducts';
 import { usePriceEntries } from '@/hooks/usePriceEntries';
 import { useStores } from '@/hooks/useStores';
 import { useExcelExport } from '@/hooks/useExcelExport';
-import { ShoppingCart, Download } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { ShoppingCart, Download, LogOut, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
@@ -19,10 +21,19 @@ const Index = () => {
   const [showNewProductForm, setShowNewProductForm] = useState(false);
   const [pendingUPC, setPendingUPC] = useState('');
   
+  const navigate = useNavigate();
+  const { user, profile, userRole, loading, signOut, isAuthenticated } = useAuth();
   const { getAllProducts, createProduct, findProductByUPC, isLoading: productLoading } = useProducts();
   const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
   const { stores, isLoading: storesLoading } = useStores();
   const { exportToExcel, isExporting } = useExcelExport();
+
+  // Redirect to auth if not authenticated
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      navigate('/auth');
+    }
+  }, [loading, isAuthenticated, navigate]);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -91,6 +102,15 @@ const Index = () => {
     }
   };
 
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-md">
@@ -100,17 +120,35 @@ const Index = () => {
               <ShoppingCart className="h-8 w-8 text-primary" />
               <h1 className="text-2xl font-bold">Kricket$$</h1>
             </div>
-            <Button 
-              onClick={exportToExcel}
-              disabled={isExporting}
-              variant="outline"
-              size="sm"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              {isExporting ? "Exporting..." : "Excel"}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                onClick={exportToExcel}
+                disabled={isExporting}
+                variant="outline"
+                size="sm"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                {isExporting ? "Exporting..." : "Excel"}
+              </Button>
+              <Button 
+                onClick={signOut}
+                variant="ghost"
+                size="sm"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground text-center">Price Collection App</p>
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">Price Collection App</p>
+            {profile && (
+              <p className="text-xs text-muted-foreground">
+                Welcome, {profile.full_name || profile.email}
+                {profile.division && ` • ${profile.division}`}
+                {userRole && ` • ${userRole.role}`}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="space-y-6">
