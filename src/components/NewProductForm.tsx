@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PlusCircle } from 'lucide-react';
+import { SearchableCombobox } from '@/components/SearchableCombobox';
+import { useUniqueValues } from '@/hooks/useUniqueValues';
 
 interface NewProductFormProps {
   upc: string;
@@ -20,6 +22,7 @@ interface NewProductFormProps {
 }
 
 export const NewProductForm = ({ upc, onProductCreate, isLoading, onCancel }: NewProductFormProps) => {
+  const { brands, categories, segments } = useUniqueValues();
   const [formData, setFormData] = useState({
     Description: '',
     Brand: '',
@@ -68,11 +71,13 @@ export const NewProductForm = ({ upc, onProductCreate, isLoading, onCancel }: Ne
 
           <div className="space-y-2">
             <Label htmlFor="brand">Brand</Label>
-            <Input
-              id="brand"
+            <SearchableCombobox
+              placeholder="Select or type brand name"
+              searchPlaceholder="Search brands..."
+              options={brands}
               value={formData.Brand}
-              onChange={(e) => handleInputChange('Brand', e.target.value)}
-              placeholder="Enter brand name"
+              onChange={(value) => handleInputChange('Brand', value)}
+              disabled={isLoading}
             />
           </div>
 
@@ -88,21 +93,25 @@ export const NewProductForm = ({ upc, onProductCreate, isLoading, onCancel }: Ne
 
           <div className="space-y-2">
             <Label htmlFor="category">Category</Label>
-            <Input
-              id="category"
+            <SearchableCombobox
+              placeholder="Select or type category"
+              searchPlaceholder="Search categories..."
+              options={categories}
               value={formData.Category}
-              onChange={(e) => handleInputChange('Category', e.target.value)}
-              placeholder="Enter category"
+              onChange={(value) => handleInputChange('Category', value)}
+              disabled={isLoading}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="segment">Segment</Label>
-            <Input
-              id="segment"
+            <SearchableCombobox
+              placeholder="Select or type segment"
+              searchPlaceholder="Search segments..."
+              options={segments}
               value={formData.Segment}
-              onChange={(e) => handleInputChange('Segment', e.target.value)}
-              placeholder="Enter segment"
+              onChange={(value) => handleInputChange('Segment', value)}
+              disabled={isLoading}
             />
           </div>
 
