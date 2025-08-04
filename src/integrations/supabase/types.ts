@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      "Food Items": {
+        Row: {
+          Brand: string | null
+          Category: string | null
+          created_at: string
+          Description: string | null
+          Price: string | null
+          Segment: string | null
+          Size: string | null
+          UID: number
+          UPC: string
+        }
+        Insert: {
+          Brand?: string | null
+          Category?: string | null
+          created_at: string
+          Description?: string | null
+          Price?: string | null
+          Segment?: string | null
+          Size?: string | null
+          UID?: number
+          UPC: string
+        }
+        Update: {
+          Brand?: string | null
+          Category?: string | null
+          created_at?: string
+          Description?: string | null
+          Price?: string | null
+          Segment?: string | null
+          Size?: string | null
+          UID?: number
+          UPC?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
