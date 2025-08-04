@@ -50,6 +50,48 @@ export type Database = {
         }
         Relationships: []
       }
+      price_entries: {
+        Row: {
+          created_at: string
+          id: string
+          price: number
+          product_uid: number
+          store_id: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          price: number
+          product_uid: number
+          store_id: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          price?: number
+          product_uid?: number
+          store_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_price_entries_product"
+            columns: ["product_uid"]
+            isOneToOne: false
+            referencedRelation: "Food Items"
+            referencedColumns: ["UID"]
+          },
+          {
+            foreignKeyName: "fk_price_entries_store"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "Stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Stores: {
         Row: {
           created_at: string | null

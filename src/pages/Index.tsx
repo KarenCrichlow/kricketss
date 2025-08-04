@@ -1,18 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UPCScanner } from '@/components/UPCScanner';
 import { ProductInfo } from '@/components/ProductInfo';
+import { PriceEntryForm } from '@/components/PriceEntryForm';
+import { PriceHistory } from '@/components/PriceHistory';
 import { useProducts } from '@/hooks/useProducts';
+import { usePriceEntries } from '@/hooks/usePriceEntries';
+import { useStores } from '@/hooks/useStores';
 import { ShoppingCart } from 'lucide-react';
 
 const Index = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [priceHistory, setPriceHistory] = useState([]);
   
   const { findProductByUPC, isLoading: productLoading } = useProducts();
+  const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
+  const { stores, isLoading: storesLoading } = useStores();
 
   const handleUPCSubmit = async (upc: string) => {
     const product = await findProductByUPC(upc);
     if (product) {
       setCurrentProduct(product);
+      const history = await getPriceHistory(product.UID);
+      setPriceHistory(history);
+    }
+  };
+
+  const handlePriceSubmit = async (data: { price: number; storeId: string }) => {
+    if (!currentProduct) return;
+    
+    const success = await savePriceEntry(currentProduct.UID, data.price, data.storeId);
+    if (success) {
+      const history = await getPriceHistory(currentProduct.UID);
+      setPriceHistory(history);
     }
   };
 
@@ -34,7 +53,18 @@ const Index = () => {
           />
 
           {currentProduct && (
-            <ProductInfo product={currentProduct} />
+            <>
+              <ProductInfo product={currentProduct} />
+              
+              <PriceEntryForm 
+                productUID={currentProduct.UID}
+                stores={stores}
+                onPriceSubmit={handlePriceSubmit}
+                isLoading={priceLoading}
+              />
+
+              <PriceHistory priceEntries={priceHistory} stores={stores} />
+            </>
           )}
         </div>
       </div>

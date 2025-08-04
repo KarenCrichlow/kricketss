@@ -10,9 +10,8 @@ export const useStores = () => {
   const fetchStores = async () => {
     setIsLoading(true);
     try {
-      // Since we don't have the Stores table in types yet, we'll use any for now
       const { data, error } = await supabase
-        .from('Stores' as any)
+        .from('Stores')
         .select('*')
         .order('Stores');
 
