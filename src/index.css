@@ -44,7 +44,7 @@ All colors MUST be HSL.
     --accent-glow: 188 95% 78%;
     --gradient-primary: linear-gradient(135deg, hsl(220 91% 20%), hsl(220 91% 35%));
     --gradient-accent: linear-gradient(135deg, hsl(185 84% 25%), hsl(188 95% 68%));
-    --gradient-bg: linear-gradient(180deg, hsl(210 20% 98%), hsl(210 25% 96%));
+    --brand-teal: 172 85% 41%;  /* #16B6AB */
     --shadow-elegant: 0 10px 30px -10px hsl(220 91% 20% / 0.3);
     --shadow-glow: 0 0 40px hsl(220 91% 35% / 0.4);
 
@@ -93,7 +93,7 @@ All colors MUST be HSL.
     --accent-glow: 188 95% 78%;
     --gradient-primary: linear-gradient(135deg, hsl(220 91% 70%), hsl(220 91% 80%));
     --gradient-accent: linear-gradient(135deg, hsl(185 84% 39%), hsl(188 95% 68%));
-    --gradient-bg: linear-gradient(180deg, hsl(220 39% 11%), hsl(220 35% 15%));
+    --brand-teal: 172 85% 41%;  /* #16B6AB */
     --shadow-elegant: 0 10px 30px -10px hsl(220 91% 70% / 0.3);
     --shadow-glow: 0 0 40px hsl(220 91% 70% / 0.4);
 

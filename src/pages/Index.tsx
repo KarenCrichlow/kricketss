@@ -98,7 +98,7 @@ const Index = () => {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <ShoppingCart className="h-8 w-8 text-primary" />
-              <h1 className="text-2xl font-bold">Kricket</h1>
+              <h1 className="text-2xl font-bold text-brand-teal">Kricket</h1>
             </div>
             <Button 
               onClick={exportToExcel}
