@@ -13,7 +13,7 @@ import PendingApprovalMessage from "@/components/PendingApprovalMessage";
 const queryClient = new QueryClient();
 
 const AppContent = () => {
-  const { isAuthenticated, loading, isPending, profile } = useAuth();
+  const { isAuthenticated, loading, isPending, profile, isAdmin } = useAuth();
 
   if (loading) {
     return (
@@ -23,8 +23,8 @@ const AppContent = () => {
     );
   }
 
-  // Show pending approval message for authenticated but pending users
-  if (isAuthenticated && isPending) {
+  // Show pending approval message for authenticated but pending users (except admins)
+  if (isAuthenticated && isPending && !isAdmin) {
     return <PendingApprovalMessage userEmail={profile?.email} />;
   }
 
