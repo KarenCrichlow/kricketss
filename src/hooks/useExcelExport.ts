@@ -53,7 +53,7 @@ export const useExcelExport = () => {
           Brand: product.Brand,
           Category: product.Category,
           Segment: product.Segment,
-          'Original Price': product.Price
+          'Massy - 29/01/2025': product.Price
         };
 
         // Add price columns for each store and date
@@ -89,7 +89,7 @@ export const useExcelExport = () => {
               Brand: product.Brand,
               Category: product.Category,
               Segment: product.Segment,
-              'Original Price': product.Price
+              'Massy - 29/01/2025': product.Price
             };
 
             // Add price columns for each date at this store
