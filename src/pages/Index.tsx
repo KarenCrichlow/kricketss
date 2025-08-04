@@ -76,8 +76,15 @@ const Index = () => {
     
     const success = await savePriceEntry(currentProduct.UID, data.price, data.storeId);
     if (success) {
-      const history = await getPriceHistory(currentProduct.UID);
-      setPriceHistory(history);
+      // Reset everything to allow new entry
+      setCurrentProduct(null);
+      setPriceHistory([]);
+      setShowNewProductForm(false);
+      setPendingUPC('');
+      
+      // Refresh products list in case new ones were added
+      const allProducts = await getAllProducts();
+      setProducts(allProducts);
     }
   };
 
