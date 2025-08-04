@@ -1,11 +1,74 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from 'react';
+import { UPCScanner } from '@/components/UPCScanner';
+import { ProductInfo } from '@/components/ProductInfo';
+import { PriceEntryForm } from '@/components/PriceEntryForm';
+import { PriceHistory } from '@/components/PriceHistory';
+import { useProducts } from '@/hooks/useProducts';
+import { usePriceEntries } from '@/hooks/usePriceEntries';
+import { useStores } from '@/hooks/useStores';
+import { ShoppingCart } from 'lucide-react';
 
 const Index = () => {
-  return <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Kricket</h1>
-        <p className="text-xl text-muted-foreground">Your Price Capture App</p>
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [priceHistory, setPriceHistory] = useState([]);
+  
+  const { findProductByUPC, isLoading: productLoading } = useProducts();
+  const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
+  const { stores, isLoading: storesLoading } = useStores();
+
+  const handleUPCSubmit = async (upc: string) => {
+    const product = await findProductByUPC(upc);
+    if (product) {
+      setCurrentProduct(product);
+      const history = await getPriceHistory(product.UID);
+      setPriceHistory(history);
+    }
+  };
+
+  const handlePriceSubmit = async (data: { price: number; storeId: string }) => {
+    if (!currentProduct) return;
+    
+    const success = await savePriceEntry(currentProduct.UID, data.price, data.storeId);
+    if (success) {
+      const history = await getPriceHistory(currentProduct.UID);
+      setPriceHistory(history);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6 max-w-md">
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <ShoppingCart className="h-8 w-8 text-primary" />
+            <h1 className="text-2xl font-bold">Kricket</h1>
+          </div>
+          <p className="text-sm text-muted-foreground">Price Collection App</p>
+        </div>
+
+        <div className="space-y-6">
+          <UPCScanner 
+            onUPCSubmit={handleUPCSubmit}
+            isLoading={productLoading}
+          />
+
+          {currentProduct && (
+            <>
+              <ProductInfo product={currentProduct} />
+              
+              <PriceEntryForm 
+                productUID={currentProduct.UID}
+                stores={stores}
+                onPriceSubmit={handlePriceSubmit}
+                isLoading={priceLoading}
+              />
+
+              <PriceHistory priceEntries={priceHistory} />
+            </>
+          )}
+        </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default Index;
