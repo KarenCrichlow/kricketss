@@ -44,6 +44,7 @@ const formatWorksheet = (worksheet: any, data: any[]) => {
         if (!cell.s) cell.s = {};
         if (!cell.s.font) cell.s.font = {};
         cell.s.font.sz = 10;
+        cell.s.font.name = 'Arial';
       }
     }
   }
