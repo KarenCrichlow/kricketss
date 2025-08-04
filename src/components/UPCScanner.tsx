@@ -27,6 +27,17 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
     try {
       setIsScanning(true);
       
+      // Check if BarcodeScanner is available (only on mobile devices)
+      if (!(window as any).BarcodeScanner) {
+        toast({
+          title: "Camera scanning not available",
+          description: "Barcode scanning only works on mobile devices. Please use manual entry.",
+          variant: "destructive"
+        });
+        setIsScanning(false);
+        return;
+      }
+      
       // Check permissions
       const permission = await (window as any).BarcodeScanner?.checkPermission();
       
