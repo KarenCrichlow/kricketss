@@ -36,6 +36,51 @@ export const useProducts = () => {
     }
   };
 
+  const createProduct = async (productData: {
+    UPC: string;
+    Description: string;
+    Brand: string;
+    Size: string;
+    Category: string;
+    Segment: string;
+  }) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('Food Items')
+        .insert({
+          ...productData,
+          created_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to create product",
+          variant: "destructive",
+        });
+        return null;
+      }
+
+      toast({
+        title: "Success",
+        description: "Product created successfully",
+      });
+      return data;
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create product",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const findProductByUPC = async (upc: string) => {
     setIsLoading(true);
     try {
@@ -78,6 +123,7 @@ export const useProducts = () => {
 
   return {
     getAllProducts,
+    createProduct,
     findProductByUPC,
     isLoading,
   };

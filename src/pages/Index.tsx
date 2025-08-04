@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { UPCScanner } from '@/components/UPCScanner';
 import { ProductSelector } from '@/components/ProductSelector';
+import { NewProductForm } from '@/components/NewProductForm';
 import { ProductInfo } from '@/components/ProductInfo';
 import { PriceEntryForm } from '@/components/PriceEntryForm';
 import { PriceHistory } from '@/components/PriceHistory';
@@ -13,8 +14,10 @@ const Index = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [priceHistory, setPriceHistory] = useState([]);
   const [products, setProducts] = useState([]);
+  const [showNewProductForm, setShowNewProductForm] = useState(false);
+  const [pendingUPC, setPendingUPC] = useState('');
   
-  const { getAllProducts, findProductByUPC, isLoading: productLoading } = useProducts();
+  const { getAllProducts, createProduct, findProductByUPC, isLoading: productLoading } = useProducts();
   const { savePriceEntry, getPriceHistory, isLoading: priceLoading } = usePriceEntries();
   const { stores, isLoading: storesLoading } = useStores();
 
@@ -32,7 +35,34 @@ const Index = () => {
       setCurrentProduct(product);
       const history = await getPriceHistory(product.UID);
       setPriceHistory(history);
+      setShowNewProductForm(false);
+    } else {
+      // Product not found, show form to create new product
+      setPendingUPC(upc);
+      setShowNewProductForm(true);
+      setCurrentProduct(null);
+      setPriceHistory([]);
     }
+  };
+
+  const handleProductCreate = async (productData: any) => {
+    const newProduct = await createProduct(productData);
+    if (newProduct) {
+      setCurrentProduct(newProduct);
+      setShowNewProductForm(false);
+      setPendingUPC('');
+      // Refresh products list
+      const allProducts = await getAllProducts();
+      setProducts(allProducts);
+      // Get price history for new product (will be empty)
+      const history = await getPriceHistory(newProduct.UID);
+      setPriceHistory(history);
+    }
+  };
+
+  const handleCancelNewProduct = () => {
+    setShowNewProductForm(false);
+    setPendingUPC('');
   };
 
   const handleProductSelect = async (product: any) => {
@@ -73,6 +103,15 @@ const Index = () => {
             onProductSelect={handleProductSelect}
             isLoading={productLoading}
           />
+
+          {showNewProductForm && (
+            <NewProductForm 
+              upc={pendingUPC}
+              onProductCreate={handleProductCreate}
+              onCancel={handleCancelNewProduct}
+              isLoading={productLoading}
+            />
+          )}
 
           {currentProduct && (
             <>
