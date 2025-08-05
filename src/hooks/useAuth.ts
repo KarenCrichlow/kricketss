@@ -27,6 +27,20 @@ export const useAuth = () => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state change:', event, session);
+        
+        // Handle sign out or token refresh errors
+        if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+          if (!session) {
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+            setUserRole(null);
+            setLoading(false);
+            return;
+          }
+        }
+        
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -46,7 +60,18 @@ export const useAuth = () => {
     );
 
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Session error:', error);
+        // Clear invalid session
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setUserRole(null);
+        setLoading(false);
+        return;
+      }
+      
       setSession(session);
       setUser(session?.user ?? null);
       
@@ -55,6 +80,13 @@ export const useAuth = () => {
         fetchUserRole(session.user.id);
       }
       
+      setLoading(false);
+    }).catch((error) => {
+      console.error('Auth session error:', error);
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      setUserRole(null);
       setLoading(false);
     });
 
