@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
@@ -26,6 +26,11 @@ interface ProductSelectorProps {
 export const ProductSelector = ({ products, onProductSelect, isLoading, selectedProduct: externalSelectedProduct }: ProductSelectorProps) => {
   const [open, setOpen] = useState(false);
   const selectedProduct = externalSelectedProduct;
+
+  // Sort products alphabetically by description
+  const sortedProducts = useMemo(() => {
+    return [...products].sort((a, b) => a.Description.localeCompare(b.Description));
+  }, [products]);
 
   const handleProductSelect = (product: Product) => {
     setOpen(false);
@@ -66,12 +71,19 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0" align="start">
-              <Command>
+              <Command
+                filter={(value, search) => {
+                  const searchTerm = search.toLowerCase();
+                  const productText = value.toLowerCase();
+                  // Check if the product text contains the search term as a continuous string
+                  return productText.includes(searchTerm) ? 1 : 0;
+                }}
+              >
                 <CommandInput placeholder="Type to search products..." />
                 <CommandList>
                   <CommandEmpty>No products found.</CommandEmpty>
                   <CommandGroup>
-                    {products.map((product) => (
+                    {sortedProducts.map((product) => (
                       <CommandItem
                         key={product.UID}
                         value={`${product.Description} ${product.Brand} ${product.Size} ${product.UPC}`}
