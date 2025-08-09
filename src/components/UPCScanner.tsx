@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Scan, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Capacitor } from '@capacitor/core';
 
 interface UPCScannerProps {
   onUPCSubmit: (upc: string) => void;
@@ -27,8 +28,8 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
     try {
       setIsScanning(true);
       
-      // Check if BarcodeScanner is available (only on mobile devices)
-      if (!(window as any).BarcodeScanner) {
+      // Check if we're on a native platform
+      if (!Capacitor.isNativePlatform()) {
         toast({
           title: "Camera scanning not available",
           description: "Barcode scanning only works on mobile devices. Please use manual entry.",
@@ -37,35 +38,24 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
         setIsScanning(false);
         return;
       }
-      
-      // Check permissions
-      const permission = await (window as any).BarcodeScanner?.checkPermission();
-      
-      if (permission?.granted === false) {
-        const permissionResult = await (window as any).BarcodeScanner?.requestPermission();
-        if (permissionResult?.granted === false) {
-          toast({
-            title: "Permission required",
-            description: "Camera permission is needed to scan barcodes",
-            variant: "destructive"
-          });
-          setIsScanning(false);
-          return;
-        }
-      }
 
-      // Hide background elements
-      document.body.style.background = 'transparent';
+      // Import and use the barcode scanner
+      const { CapacitorBarcodeScanner } = await import('@capacitor/barcode-scanner');
       
-      // Start scanning
-      const result = await (window as any).BarcodeScanner?.startScan();
+      // Start scanning with options
+      const result = await CapacitorBarcodeScanner.scanBarcode({
+        hint: 17, // ALL barcodes
+        scanInstructions: 'Point camera at barcode to scan',
+        scanButton: true,
+        scanText: 'Scan'
+      });
       
-      if (result?.hasContent) {
-        setUPC(result.content);
-        onUPCSubmit(result.content);
+      if (result.ScanResult) {
+        setUPC(result.ScanResult);
+        onUPCSubmit(result.ScanResult);
         toast({
           title: "Barcode scanned",
-          description: `UPC: ${result.content}`
+          description: `UPC: ${result.ScanResult}`
         });
       }
     } catch (error) {
@@ -77,10 +67,6 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
       });
     } finally {
       setIsScanning(false);
-      // Restore background
-      document.body.style.background = '';
-      // Stop scanning
-      await (window as any).BarcodeScanner?.stopScan();
     }
   };
 
