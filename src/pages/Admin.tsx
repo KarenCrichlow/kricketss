@@ -4,9 +4,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAdminUsers } from "@/hooks/useAdminUsers";
 import { CreateUserForm } from "@/components/CreateUserForm";
 import { UserList } from "@/components/UserList";
+import { SecurityMonitor } from "@/components/SecurityMonitor";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Users, UserPlus, Shield, Loader2 } from "lucide-react";
+import { ArrowLeft, Users, UserPlus, Shield, Loader2, Activity } from "lucide-react";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Manage Users
@@ -77,6 +78,10 @@ const Admin = () => {
             <TabsTrigger value="create" className="flex items-center gap-2">
               <UserPlus className="h-4 w-4" />
               Create User
+            </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center gap-2">
+              <Activity className="h-4 w-4" />
+              Security
             </TabsTrigger>
           </TabsList>
 
@@ -96,6 +101,10 @@ const Admin = () => {
               onCreateUser={createUser}
               isLoading={loading}
             />
+          </TabsContent>
+
+          <TabsContent value="security" className="space-y-6">
+            <SecurityMonitor />
           </TabsContent>
         </Tabs>
       </div>

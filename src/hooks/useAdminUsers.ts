@@ -143,9 +143,15 @@ export const useAdminUsers = () => {
 
   const updateUserProfile = async (userId: string, updates: { full_name?: string; division?: string }) => {
     try {
+      // Sanitize input data
+      const sanitizedUpdates = {
+        ...(updates.full_name && { full_name: updates.full_name.trim().slice(0, 100) }),
+        ...(updates.division && { division: updates.division.trim().slice(0, 100) })
+      };
+
       const { error } = await supabase
         .from('profiles')
-        .update(updates)
+        .update(sanitizedUpdates)
         .eq('id', userId);
 
       if (error) throw error;
