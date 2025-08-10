@@ -157,8 +157,9 @@ const Index = () => {
                 disabled={isExporting}
                 variant="outline"
                 size="sm"
+                className="bg-olive-400 hover:bg-olive-500 text-black border-olive-400"
               >
-                <Download className="h-4 w-4 mr-2" />
+                <Download className="h-4 w-4 mr-2 text-black" />
                 {isExporting ? "Exporting..." : "Excel"}
               </Button>
               {isAdmin && (
@@ -166,8 +167,9 @@ const Index = () => {
                   onClick={() => navigate('/admin')}
                   variant="outline"
                   size="sm"
+                  className="bg-purple-300 hover:bg-purple-400 text-black border-purple-300"
                 >
-                  <Shield className="h-4 w-4 mr-2" />
+                  <Shield className="h-4 w-4 mr-2 text-black" />
                   Admin
                 </Button>
               )}
