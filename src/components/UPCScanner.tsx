@@ -90,6 +90,7 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
                 size="icon"
                 onClick={startScan}
                 disabled={isScanning || isLoading}
+                className="bg-white"
               >
                 <Scan className="h-4 w-4" />
               </Button>

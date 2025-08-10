@@ -148,7 +148,7 @@ const Index = () => {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <ShoppingCart className="h-8 w-8 text-primary" />
+              <ShoppingCart className="h-8 w-8 text-white" />
               <h1 className="text-2xl font-bold">Kricket$$</h1>
             </div>
             <div className="flex items-center gap-2">
@@ -181,9 +181,9 @@ const Index = () => {
             </div>
           </div>
           <div className="text-center">
-            <p className="text-sm text-muted-foreground">Price Collection App</p>
+            <p className="text-sm text-white">Price Collection App</p>
             {profile && (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-white">
                 Welcome, {profile.full_name || profile.email}
                 {profile.division && ` • ${profile.division}`}
                 {userRole && ` • ${userRole.role}`}
