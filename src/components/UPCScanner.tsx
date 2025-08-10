@@ -98,7 +98,7 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
           </div>
           <Button 
             type="submit" 
-            className="w-full bg-teal-600 hover:bg-teal-700 text-white" 
+            className="w-full bg-teal-600 hover:bg-teal-700 text-black" 
             disabled={!upc.trim() || isLoading}
           >
             <Search className="h-4 w-4 mr-2" />

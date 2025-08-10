@@ -48,7 +48,7 @@ export const PriceEntryForm = ({ productUID, stores, onPriceSubmit, isLoading }:
           <div className="space-y-2">
             <Label htmlFor="store">Store</Label>
             <Select value={storeId} onValueChange={setStoreId}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select a store" />
               </SelectTrigger>
               <SelectContent>
@@ -70,6 +70,7 @@ export const PriceEntryForm = ({ productUID, stores, onPriceSubmit, isLoading }:
               placeholder="0.00"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+              className="bg-white"
             />
           </div>
 
