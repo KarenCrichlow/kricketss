@@ -50,7 +50,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
             <Badge variant="secondary">{product.Category}</Badge>
           )}
           {product.Segment && (
-            <Badge variant="outline">{product.Segment}</Badge>
+            <Badge variant="secondary">{product.Segment}</Badge>
           )}
         </div>
       </CardContent>
