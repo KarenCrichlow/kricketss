@@ -147,29 +147,29 @@ const Index = () => {
       <div className="container mx-auto px-4 py-6 max-w-md">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <ShoppingCart className="h-8 w-8 text-white" />
               <h1 className="text-2xl font-bold">Kricket$$</h1>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <Button 
                 onClick={exportToExcel}
                 disabled={isExporting}
                 variant="outline"
                 size="sm"
-                className="bg-lime-400 hover:bg-lime-500 text-black border-lime-400"
+                className="bg-lime-400 hover:bg-lime-500 text-black border-lime-400 px-2 py-1 text-xs"
               >
-                <Download className="h-4 w-4 mr-2 text-black" />
-                {isExporting ? "Exporting..." : "Excel"}
+                <Download className="h-3 w-3 mr-1 text-black" />
+                {isExporting ? "..." : "Excel"}
               </Button>
               {isAdmin && (
                 <Button 
                   onClick={() => navigate('/admin')}
                   variant="outline"
                   size="sm"
-                  className="bg-purple-300 hover:bg-purple-400 text-black border-purple-300"
+                  className="bg-purple-300 hover:bg-purple-400 text-black border-purple-300 px-2 py-1 text-xs"
                 >
-                  <Shield className="h-4 w-4 mr-2 text-black" />
+                  <Shield className="h-3 w-3 mr-1 text-black" />
                   Admin
                 </Button>
               )}
@@ -177,8 +177,9 @@ const Index = () => {
                 onClick={signOut}
                 variant="ghost"
                 size="sm"
+                className="px-2 py-1"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-3 w-3" />
               </Button>
             </div>
           </div>
