@@ -82,7 +82,7 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
                 placeholder="Enter or scan UPC code"
                 value={upc}
                 onChange={(e) => setUPC(e.target.value)}
-                className="flex-1"
+                className="flex-1 bg-white"
               />
               <Button 
                 type="button" 

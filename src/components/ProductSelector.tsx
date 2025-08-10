@@ -54,7 +54,7 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-full justify-between h-auto min-h-[2.5rem]"
+                className="w-full justify-between h-auto min-h-[2.5rem] bg-white"
                 disabled={isLoading}
               >
                 {selectedProduct ? (
