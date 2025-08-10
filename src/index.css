@@ -9,8 +9,8 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Modern Blue & Teal Theme - Light Mode */
-    --background: 210 20% 98%;
-    --foreground: 220 39% 11%;
+    --background: 185 84% 15%;
+    --foreground: 210 20% 98%;
 
     --card: 0 0% 100%;
     --card-foreground: 220 39% 11%;
