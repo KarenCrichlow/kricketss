@@ -27,7 +27,7 @@ export const useAuth = () => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        // Auth state change detected
+        console.log('Auth state change:', event, session);
         
         // Handle sign out or token refresh errors
         if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {

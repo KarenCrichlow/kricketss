@@ -68,8 +68,10 @@ const Index = () => {
   }
 
   const handleUPCSubmit = async (upc: string) => {
+    console.log('Starting UPC search for:', upc);
     try {
       const product = await findProductByUPC(upc);
+      console.log('Search result:', product);
       
       if (product) {
         setCurrentProduct(product);

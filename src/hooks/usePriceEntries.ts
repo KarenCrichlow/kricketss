@@ -18,23 +18,12 @@ export const usePriceEntries = () => {
   const savePriceEntry = async (productUID: number, price: number, storeId: string) => {
     setIsLoading(true);
     try {
-      // Input validation
-      if (!productUID || productUID <= 0) {
-        throw new Error('Invalid product ID');
-      }
-      if (!price || price <= 0 || price > 10000) {
-        throw new Error('Price must be between $0.01 and $10,000');
-      }
-      if (!storeId || isNaN(parseInt(storeId))) {
-        throw new Error('Invalid store selection');
-      }
-
       const { error } = await supabase
         .from('price_entries')
         .insert({
           product_uid: productUID,
           store_id: parseInt(storeId),
-          price: Number(price.toFixed(2)), // Ensure proper decimal formatting
+          price: price,
         });
 
       if (error) {
