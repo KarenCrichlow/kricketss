@@ -63,7 +63,7 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
               >
                 {selectedProduct ? (
                   <div className="flex flex-col items-start text-left">
-                    <span className="font-medium">{selectedProduct.Description || 'No Description'}</span>
+                    <span className="font-medium text-foreground">{selectedProduct.Description || 'No Description'}</span>
                     {(selectedProduct.Brand || selectedProduct.Size) && (
                       <span className="text-sm text-muted-foreground">
                         {[selectedProduct.Brand, selectedProduct.Size].filter(Boolean).join(' - ')}
@@ -76,7 +76,7 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0" align="start">
+            <PopoverContent className="w-full p-0 bg-popover text-popover-foreground z-50" align="start">
               <Command
                 filter={(value, search) => {
                   const searchTerm = search.toLowerCase();
@@ -103,7 +103,7 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
                           )}
                         />
                         <div className="flex flex-col">
-                          <span className="font-medium">{product.Description || 'No Description'}</span>
+                          <span className="font-medium text-foreground">{product.Description || 'No Description'}</span>
                           {(product.Brand || product.Size || product.UPC) && (
                             <span className="text-sm text-muted-foreground">
                               {[product.Brand, product.Size, product.UPC && `UPC: ${product.UPC}`].filter(Boolean).join(' - ')}
