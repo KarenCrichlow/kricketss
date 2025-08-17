@@ -29,7 +29,11 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
 
   // Sort products alphabetically by description
   const sortedProducts = useMemo(() => {
-    return [...products].sort((a, b) => a.Description.localeCompare(b.Description));
+    return [...products].sort((a, b) => {
+      const descA = a.Description || '';
+      const descB = b.Description || '';
+      return descA.localeCompare(descB);
+    });
   }, [products]);
 
   const handleProductSelect = (product: Product) => {
@@ -59,10 +63,12 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
               >
                 {selectedProduct ? (
                   <div className="flex flex-col items-start text-left">
-                    <span className="font-medium">{selectedProduct.Description}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {selectedProduct.Brand} - {selectedProduct.Size}
-                    </span>
+                    <span className="font-medium">{selectedProduct.Description || 'No Description'}</span>
+                    {(selectedProduct.Brand || selectedProduct.Size) && (
+                      <span className="text-sm text-muted-foreground">
+                        {[selectedProduct.Brand, selectedProduct.Size].filter(Boolean).join(' - ')}
+                      </span>
+                    )}
                   </div>
                 ) : (
                   "Select a product..."
@@ -97,10 +103,12 @@ export const ProductSelector = ({ products, onProductSelect, isLoading, selected
                           )}
                         />
                         <div className="flex flex-col">
-                          <span className="font-medium">{product.Description}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {product.Brand} - {product.Size} (UPC: {product.UPC})
-                          </span>
+                          <span className="font-medium">{product.Description || 'No Description'}</span>
+                          {(product.Brand || product.Size || product.UPC) && (
+                            <span className="text-sm text-muted-foreground">
+                              {[product.Brand, product.Size, product.UPC && `UPC: ${product.UPC}`].filter(Boolean).join(' - ')}
+                            </span>
+                          )}
                         </div>
                       </CommandItem>
                     ))}
