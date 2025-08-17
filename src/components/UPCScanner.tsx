@@ -42,27 +42,28 @@ export const UPCScanner = ({ onUPCSubmit, isLoading }: UPCScannerProps) => {
       // Import and use the barcode scanner
       const { CapacitorBarcodeScanner } = await import('@capacitor/barcode-scanner');
       
-      // Start scanning with options
+      // Start scanning with proper options for UPC codes
       const result = await CapacitorBarcodeScanner.scanBarcode({
-        hint: 17, // ALL barcodes
-        scanInstructions: 'Point camera at barcode to scan',
+        hint: 17, // ALL barcodes (includes UPC_A, UPC_E, EAN_13, EAN_8, CODE_128, etc.)
+        scanInstructions: 'Point camera at barcode or QR code to scan',
         scanButton: true,
-        scanText: 'Scan'
+        scanText: 'Scan',
+        cameraDirection: 1, // BACK camera
+        scanOrientation: 3 // ADAPTIVE orientation
       });
       
       if (result.ScanResult) {
         setUPC(result.ScanResult);
         onUPCSubmit(result.ScanResult);
         toast({
-          title: "Barcode scanned",
+          title: "Barcode scanned successfully",
           description: `UPC: ${result.ScanResult}`
         });
       }
-    } catch (error) {
-      console.error('Barcode scanning error:', error);
+    } catch (error: any) {
       toast({
         title: "Scanning failed",
-        description: "Could not scan barcode. Please try manual entry.",
+        description: error.message || "Could not scan barcode. Please try manual entry.",
         variant: "destructive"
       });
     } finally {

@@ -6,6 +6,12 @@ export const useProducts = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // Input sanitization helper
+  const sanitizeInput = (input: string): string => {
+    if (typeof input !== 'string') return '';
+    return input.trim().slice(0, 1000); // Limit length and trim whitespace
+  };
+
   const getAllProducts = async () => {
     setIsLoading(true);
     try {
@@ -46,12 +52,20 @@ export const useProducts = () => {
   }) => {
     setIsLoading(true);
     try {
+      // Sanitize input data
+      const sanitizedData = {
+        Description: sanitizeInput(productData.Description),
+        Category: sanitizeInput(productData.Category),
+        Brand: sanitizeInput(productData.Brand),
+        Size: sanitizeInput(productData.Size),
+        Segment: sanitizeInput(productData.Segment),
+        UPC: sanitizeInput(productData.UPC).replace(/[^0-9]/g, ''), // Only digits for UPC
+        created_at: new Date().toISOString()
+      };
+
       const { data, error } = await supabase
         .from('Food Items')
-        .insert({
-          ...productData,
-          created_at: new Date().toISOString(),
-        })
+        .insert(sanitizedData)
         .select()
         .single();
 
@@ -84,10 +98,22 @@ export const useProducts = () => {
   const findProductByUPC = async (upc: string) => {
     setIsLoading(true);
     try {
+      // Sanitize UPC input - only allow digits
+      const sanitizedUPC = upc.replace(/[^0-9]/g, '').slice(0, 14);
+      
+      if (!sanitizedUPC || sanitizedUPC.length < 8) {
+        toast({
+          title: "Invalid UPC",
+          description: "UPC must be at least 8 digits",
+          variant: "destructive",
+        });
+        return null;
+      }
+
       const { data, error } = await supabase
         .from('Food Items')
         .select('*')
-        .eq('UPC', upc)
+        .eq('UPC', sanitizedUPC)
         .maybeSingle();
 
       if (error) {
